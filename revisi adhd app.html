@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAARS-S:L — Penilaian Diri ADHD</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --primary: #7C3AED;
+  --primary-dark: #5B21B6;
+  --accent: #F97316;
+  --accent-dark: #C2410C;
+  --green: #22C55E;
+  --bg: #F8FAFC;
+  --card: #FFFFFF;
+  --text: #1E293B;
+  --muted: #64748B;
+  --border: #E2E8F0;
+  --shadow: 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-solid: 0 4px 0px rgba(0,0,0,0.1);
+}
+
+body.dark-mode {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+  --border: #334155;
+  --shadow: 0 8px 24px rgba(0,0,0,0.3);
+  --shadow-solid: 0 4px 0px rgba(0,0,0,0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light-mode) {
+    --bg: #0F172A;
+    --card: #1E293B;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --border: #334155;
+    --shadow: 0 8px 24px rgba(0,0,0,0.3);
+    --shadow-solid: 0 4px 0px rgba(0,0,0,0.4);
+  }
+}
+
+:root {
+  --navy: var(--text);
+  --navy-mid: var(--muted);
+  --teal: var(--primary);
+  --teal-light: rgba(124, 58, 237, 0.1);
+  --coral: #EF4444;
+  --amber: #F59E0B;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* BENTO GRID */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.bento-span-2 { grid-column: span 2; }
+.bento-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 2px solid var(--border);
+}
+
+/* LAYOUT */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* TOP BAR */
+.topbar {
+  background: var(--card);
+  color: var(--text);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border-bottom: 1.5px solid var(--border);
+}
+.topbar-brand { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: var(--text); }
+.topbar-sub { font-size: 11px; color: var(--muted); font-weight: 400; }
+.topbar-progress { display: flex; align-items: center; gap: 10px; }
+.progress-bar-wrap { width: 140px; height: 5px; background: var(--border); border-radius: 99px; }
+.progress-bar-fill { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+.progress-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+/* CONTAINER */
+.container { max-width: 720px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+/* DISCLAIMER SCREEN */
+.badge {
+  display: inline-block;
+  background: rgba(124,58,237,0.12);
+  color: var(--primary);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 5px 12px;
+  border-radius: 99px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(124,58,237,0.25);
+}
+.alert-box {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-left: 4px solid var(--amber);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+.alert-box .alert-title {
+  font-size: 13px; font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
+}
+.alert-box p { font-size: 13px; color: var(--text); opacity: 0.85; line-height: 1.6; }
+.info-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; margin-bottom: 24px;
+}
+.info-item {
+  background: var(--teal-light);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.info-icon { font-size: 20px; flex-shrink: 0; }
+.info-item h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.info-item p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px; font-weight: 600;
+  cursor: pointer; border: none;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--primary);
+  color: white; width: 100%;
+  box-shadow: 0 6px 0px var(--primary-dark);
+  font-size: 16px; font-weight: 800;
+  border-radius: 16px;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.btn-primary:active {
+  transform: translateY(6px);
+  box-shadow: 0 0px 0px var(--primary-dark);
+}
+.btn-secondary {
+  background: transparent; color: var(--muted);
+  border: 1.5px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+.btn-nav {
+  background: var(--card); color: var(--text);
+  border: 2px solid var(--border);
+  box-shadow: 0 4px 0px var(--border);
+  padding: 12px 24px; border-radius: 10px;
+  font-size: 14px; font-weight: 700;
+  transition: all 0.1s;
+}
+.btn-nav:active { transform: translateY(4px); box-shadow: 0 0px 0px var(--border); }
+.btn-nav.ghost {
+  background: transparent; color: var(--muted);
+  border: 1.5px solid var(--border);
+  box-shadow: none;
+}
+.btn-nav.ghost:hover { border-color: var(--navy); color: var(--navy); }
+
+/* FORM */
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: block; font-size: 13px; font-weight: 600;
+  color: var(--navy); margin-bottom: 8px; letter-spacing: 0.03em;
+}
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px; color: var(--text);
+  background: var(--card);
+  transition: border-color 0.2s;
+  outline: none;
+}
+.form-input:focus { border-color: var(--teal); }
+.gender-group { display: flex; gap: 12px; }
+.gender-btn {
+  flex: 1; padding: 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--card); cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--muted);
+  transition: all 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.gender-btn .g-icon { font-size: 24px; }
+.gender-btn.selected {
+  border-color: var(--teal);
+  background: var(--teal-light);
+  color: var(--teal);
+}
+.age-group-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
+.age-btn {
+  padding: 10px 6px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: var(--card); cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px; font-weight: 600;
+  color: var(--muted); text-align: center;
+  transition: all 0.2s;
+}
+.age-btn.selected { border-color: var(--teal); background: var(--teal-light); color: var(--teal); }
+
+/* QUESTIONS */
+.section-header {
+  background: var(--card);
+  border: 2px solid var(--primary);
+  border-radius: 16px;
+  padding: 24px 28px;
+  color: var(--text);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: var(--shadow-solid);
+}
+.section-num {
+  width: 48px; height: 48px;
+  background: rgba(124,58,237,0.12);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800;
+  flex-shrink: 0;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+.section-info h2 { font-size: 18px; font-weight: 700; }
+.section-info p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.scale-legend {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 8px; margin-bottom: 24px;
+}
+.scale-leg-item {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.scale-leg-num {
+  font-size: 18px; font-weight: 800;
+  color: var(--navy); margin-bottom: 4px;
+}
+.scale-leg-text { font-size: 10px; color: var(--muted); line-height: 1.4; }
+.question-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+.question-card.answered {
+  border-color: transparent;
+  background: var(--bg);
+  opacity: 0.65;
+}
+.question-card.answered:hover { opacity: 1; }
+.q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.q-num {
+  font-size: 12px; font-weight: 700;
+  color: var(--muted);
+  background: var(--border);
+  padding: 4px 10px; border-radius: 8px;
+  flex-shrink: 0; margin-top: 2px;
+}
+.q-text { font-size: 16px; font-weight: 600; line-height: 1.5; color: var(--text); }
+.q-options { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.q-opt {
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 6px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--card);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.q-opt:hover { border-color: var(--muted); transform: translateY(-2px); }
+.q-options.has-selection .q-opt:not([class*="selected-"]) {
+  opacity: 0.3;
+  filter: grayscale(100%);
+  border-color: var(--border);
+  transform: none;
+  box-shadow: none;
+}
+.q-opt.selected-0 { border-color: var(--muted); background: transparent; color: var(--text); transform: scale(1.02); box-shadow: 0 4px 0px var(--muted); }
+.q-opt.selected-1 { border-color: #3B82F6; background: rgba(59,130,246,0.1); color: #3B82F6; transform: scale(1.02); box-shadow: 0 4px 0px #3B82F6; }
+.q-opt.selected-2 { border-color: #F59E0B; background: rgba(245,158,11,0.1); color: #F59E0B; transform: scale(1.02); box-shadow: 0 4px 0px #F59E0B; }
+.q-opt.selected-3 { border-color: #EF4444; background: rgba(239,68,68,0.1); color: #EF4444; transform: scale(1.02); box-shadow: 0 4px 0px #EF4444; }
+.q-opt-num { font-size: 18px; font-weight: 800; margin-bottom: 3px; }
+.q-opt-text { font-size: 9px; font-weight: 600; line-height: 1.3; letter-spacing: 0.02em; }
+
+/* NAV FOOTER */
+.nav-footer {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 50;
+  box-shadow: 0 -4px 20px rgba(27,42,74,0.08);
+}
+.nav-count { font-size: 12px; color: var(--muted); font-weight: 500; }
+.nav-count strong { color: var(--navy); }
+.nav-btns { display: flex; gap: 10px; }
+
+/* RESULTS */
+.results-hero {
+  background: var(--primary);
+  border-radius: 24px; padding: 36px 24px;
+  color: white; margin-bottom: 24px;
+  text-align: center;
+  box-shadow: 0 8px 0px var(--primary-dark);
+  border: 4px solid var(--primary-dark);
+}
+.results-hero-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; opacity: 0.65;
+  margin-bottom: 12px;
+}
+.results-hero h2 {
+  font-size: 30px; font-weight: 900;
+  letter-spacing: 0.5px; margin-bottom: 8px;
+}
+.results-hero .hero-date {
+  font-size: 13px; opacity: 0.65; font-weight: 500;
+}
+
+/* Subtype Profil Card */
+.subtype-card {
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  border: 2px solid;
+}
+.subtype-card-label {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 8px; opacity: 0.75;
+}
+.subtype-card-title {
+  font-size: 22px; font-weight: 900; margin-bottom: 10px;
+}
+.subtype-card-desc {
+  font-size: 14px; line-height: 1.7; opacity: 0.85;
+}
+
+/* Skill bars */
+.skill-bar-wrap {
+  height: 20px; border-radius: 99px; background: var(--border);
+  overflow: hidden; position: relative; margin-bottom: 12px; margin-top: 12px;
+}
+.skill-bar-fill {
+  height: 100%; border-radius: 99px;
+  transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.skill-bar-fill::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 35%;
+  background: rgba(255,255,255,0.25); border-radius: 99px 99px 0 0;
+}
+.bar-low { background: var(--green); }
+.bar-avg { background: #3B82F6; }
+.bar-high { background: var(--accent); }
+.bar-vhigh { background: #EF4444; }
+
+/* Subscale card extras */
+.subscore-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  position: relative; overflow: hidden;
+}
+.subscore-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 14px 14px 0 0;
+}
+.subscore-card.level-low::before { background: var(--green); }
+.subscore-card.level-avg::before { background: #3B82F6; }
+.subscore-card.level-high::before { background: var(--accent); }
+.subscore-card.level-vhigh::before { background: #EF4444; }
+.ss-badge {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 99px; letter-spacing: 0.05em;
+}
+.level-low .ss-badge { background: rgba(34,197,94,0.12); color: #065F46; }
+.level-avg .ss-badge { background: rgba(59,130,246,0.12); color: #1E40AF; }
+.level-high .ss-badge { background: rgba(249,115,22,0.12); color: #92400E; }
+.level-vhigh .ss-badge { background: rgba(239,68,68,0.12); color: #991B1B; }
+
+/* Insight Detail section */
+.insight-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  border: 1.5px solid var(--border);
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.insight-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%; flex-shrink: 0;
+  margin-top: 5px;
+}
+.insight-label { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+.insight-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+/* Referral section */
+.referral-section { margin-top: 32px; }
+.referral-section h3 { font-size: 20px; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+.referral-section .section-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+.referral-cards { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.referral-card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 20px 22px;
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.referral-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.referral-card-title { font-size: 14px; font-weight: 800; color: var(--text); }
+.referral-card-tag {
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 99px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.referral-card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+.referral-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.referral-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 700;
+  padding: 7px 14px; border-radius: 10px;
+  text-decoration: none;
+  border: 1.5px solid;
+  transition: opacity 0.2s;
+}
+.referral-link:hover { opacity: 0.75; }
+.crisis-banner {
+  background: rgba(239,68,68,0.07);
+  border: 1.5px solid rgba(239,68,68,0.3);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-top: 14px;
+  display: flex; align-items: center; gap: 14px;
+}
+.crisis-banner-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: rgba(239,68,68,0.12);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.crisis-banner-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+.crisis-banner-text strong { font-weight: 800; color: #DC2626; }
+.crisis-banner-text a { color: #DC2626; font-weight: 700; }
+
+/* Disclaimer footer */
+.disclaimer-footer {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-left: 4px solid var(--amber);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+.disclaimer-footer p { font-size: 12px; color: var(--text); opacity: 0.85; line-height: 1.6; }
+
+/* SPLASH */
+.splash-container {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; min-height: 75vh; padding: 20px;
+}
+.splash-illustrations {
+  display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center;
+}
+.illust-circle {
+  width: 140px; height: 140px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow); border: 4px solid var(--card);
+}
+.illust-inattentive {
+  background: rgba(124,58,237,0.12);
+  animation: float 3s ease-in-out infinite;
+}
+.illust-hyperactive {
+  background: rgba(249,115,22,0.12);
+  animation: float 3s ease-in-out infinite 0.5s;
+}
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0px); }
+}
+.splash-title { font-size: 32px; font-weight: 900; color: var(--text); margin-bottom: 12px; line-height: 1.2; }
+.splash-subtitle { font-size: 16px; color: var(--muted); font-weight: 600; max-width: 420px; line-height: 1.6; margin-bottom: 40px; }
+
+/* MOBILE */
+@media (max-width: 580px) {
+  .subscore-grid { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: 1fr; }
+  .age-group-grid { grid-template-columns: repeat(2,1fr); }
+  .card { padding: 24px 20px; }
+  .q-opt-text { font-size: 8px; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .bento-span-2 { grid-column: span 1; }
+  .referral-links { flex-direction: column; }
+}
+
+/* PRINT */
+@media print {
+  .topbar, .nav-footer, .no-print { display: none !important; }
+  .screen { display: block !important; }
+  #screen-questions, #screen-disclaimer, #screen-demo, #screen-splash { display: none !important; }
+  body { background: white !important; color: #000 !important; }
+  .bento-card, .card, .referral-card, .insight-card { box-shadow: none !important; border: 1px solid #ddd !important; }
+  .skill-bar-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .results-hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .subtype-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.screen.active .container > * { animation: fadeIn 0.3s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button onclick="handleBack()" style="background:var(--card);color:var(--text);border:2px solid var(--border);width:40px;height:40px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.1s;box-shadow:0 4px 0px var(--border);" title="Kembali">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div>
+      <div class="topbar-brand">CAARS–S:L</div>
+      <div class="topbar-sub">Conners Adult ADHD Rating Scales</div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="topbar-progress" id="topbarProgress" style="display:none">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">0 / 66</div>
+    </div>
+    <!-- DEV MODE: Tombol Auto Fill Acak -->
+    <button onclick="autoFillRandom()" title="Auto Fill Acak (Dev)" style="background:var(--accent);border:none;cursor:pointer;color:white;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;box-shadow:0 4px 0px var(--accent-dark);transition:transform 0.1s;">
+      ⚡
+    </button>
+    <button id="themeToggleBtn" onclick="toggleTheme()" title="Ganti tema" style="background:var(--border);border:none;cursor:pointer;color:var(--text);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;transition:background 0.2s;">
+      <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 0: SPLASH -->
+<div id="screen-splash" class="screen active">
+  <div class="container splash-container">
+    <div class="splash-illustrations">
+      <div class="illust-circle illust-inattentive">
+        <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M75 25 C75 10,95 10,95 25 C105 25,105 45,95 45 C95 55,75 55,75 45 C60 45,60 25,75 25 Z" fill="var(--primary)" opacity="0.4"/>
+          <path d="M25 35 C25 20,45 20,45 35 C55 35,55 50,45 50 C45 60,25 60,25 50 C10 50,10 35,25 35 Z" fill="var(--primary)" opacity="0.2"/>
+          <circle cx="50" cy="65" r="14" fill="var(--primary)"/>
+          <path d="M30 100 C30 75,70 75,70 100" stroke="var(--primary)" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="illust-circle illust-hyperactive">
+        <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M85 10 L70 40 H90 L60 80 L75 45 H55 L85 10 Z" fill="var(--accent)" opacity="0.5"/>
+          <path d="M25 25 L15 45 H30 L10 75 L20 50 H5 L25 25 Z" fill="var(--accent)" opacity="0.2"/>
+          <circle cx="50" cy="35" r="14" fill="var(--accent)"/>
+          <path d="M50 49 L40 80 M50 49 L70 70 M30 60 L50 49 L70 40" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <h1 class="splash-title">Bagaimana Otakmu Bekerja?</h1>
+    <p class="splash-subtitle">Mari kenali caramu memproses dunia. Tidak ada jawaban yang salah, hanya langkah untuk lebih memahami dirimu.</p>
+    <button class="btn btn-primary" onclick="showScreen('screen-menu')" style="padding:20px 40px;font-size:18px;max-width:300px;">
+      <span>Masuk Beranda</span>
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 1: DISCLAIMER -->
+<div id="screen-menu" class="screen">
+  <div class="container">
+    <div style="margin-bottom:24px;">
+      <h2 style="font-size:28px;font-weight:900;color:var(--text);">Eksplorasi ADHD</h2>
+      <p style="font-size:14px;color:var(--muted);margin-top:6px;">Pilih menu di bawah ini untuk memulai perjalananmu.</p>
+    </div>
+
+    <div class="bento-grid">
+      <div class="bento-card bento-span-2" onclick="showScreen('screen-disclaimer')" style="background:var(--primary);color:white;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div>
+          <h3 style="font-size:20px;font-weight:800;margin-bottom:4px;">1. Lakukan Tes CAARS</h3>
+          <p style="opacity:0.9;font-size:13px;max-width:200px;">Skrining awal mandiri untuk mengenali pola ADHD pada orang dewasa.</p>
+        </div>
+        <div style="font-size:28px;font-weight:900;background:rgba(255,255,255,0.2);width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;">&rarr;</div>
+      </div>
+
+      <div class="bento-card" style="cursor:pointer;background:#3B82F6;color:white;border:none;transition:transform 0.2s;" onclick="alert('Fitur Panduan Hidup ADHD sedang dalam tahap pengembangan.')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        </div>
+        <h4 style="font-size:15px;font-weight:800;margin-bottom:4px;">2. Panduan Hidup</h4>
+        <p style="font-size:12px;opacity:0.9;line-height:1.4;">Tips manajemen waktu & keseharian.</p>
+      </div>
+
+      <div class="bento-card" style="cursor:pointer;background:#10B981;color:white;border:none;transition:transform 0.2s;" onclick="alert('Fitur Direktori Konsultasi Psikolog/Psikiater sedang dalam tahap pengembangan.')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <h4 style="font-size:15px;font-weight:800;margin-bottom:4px;">3. Konsultasi</h4>
+        <p style="font-size:12px;opacity:0.9;line-height:1.4;">Cari bantuan profesional resmi.</p>
+      </div>
+
+      <div class="bento-card" style="cursor:pointer;background:#F59E0B;color:white;border:none;transition:transform 0.2s;" onclick="alert('Fitur Grup Komunitas sedang dalam tahap pengembangan.')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </div>
+        <h4 style="font-size:15px;font-weight:800;margin-bottom:4px;">4. Komunitas</h4>
+        <p style="font-size:12px;opacity:0.9;line-height:1.4;">Wadah berbagi cerita & pengalaman.</p>
+      </div>
+
+      <!-- 5. Obat ADHD -->
+      <div class="bento-card" style="cursor:pointer;background:#EF4444;color:white;border:none;transition:transform 0.2s;" onclick="alert('PENTING: Informasi obat ADHD di sini hanya bersifat edukasi. Obat ADHD (seperti Methylphenidate) adalah obat keras yang WAJIB didapatkan melalui diagnosis, resep, dan pengawasan Psikiater (Dokter Spesialis Kedokteran Jiwa). Dilarang keras melakukan self-medication.')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5 19 12a4.95 4.95 0 1 0-7-7L3.5 13.5a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
+        </div>
+        <h4 style="font-size:15px;font-weight:800;margin-bottom:4px;">5. Obat ADHD</h4>
+        <p style="font-size:12px;opacity:0.9;line-height:1.4;">Edukasi medis (Hanya via Psikiater).</p>
+      </div>
+
+      <!-- 6. Ruang Fokus -->
+      <div class="bento-card" style="cursor:pointer;background:#8B5CF6;color:white;border:none;transition:transform 0.2s;" onclick="alert('Fitur Ruang Fokus (Timer & Brown Noise) sedang dalam tahap pengembangan.')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+        <h4 style="font-size:15px;font-weight:800;margin-bottom:4px;">6. Ruang Fokus</h4>
+        <p style="font-size:12px;opacity:0.9;line-height:1.4;">Timer visual & suara latar (Brown Noise).</p>
+      </div>
+
+      <!-- 7. Brain Dump / SOS -->
+      <div class="bento-card" style="cursor:pointer;background:#0F766E;color:white;border:none;transition:transform 0.2s;" onclick="alert('Fitur Brain Dump / SOS Overload sedang dalam tahap pengembangan.')" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="M8 12h8"></path><path d="M12 8v8"></path></svg>
+        </div>
+        <h4 style="font-size:15px;font-weight:800;margin-bottom:4px;">7. Kotak P3K / SOS</h4>
+        <p style="font-size:12px;opacity:0.9;line-height:1.4;">Buang isi pikiran & latihan pernapasan.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-disclaimer" class="screen">
+  <div class="container">
+    <div class="bento-grid">
+      <div class="bento-card bento-span-2" style="background:var(--primary);color:white;border:none;text-align:center;">
+        <h1 style="font-size:28px;font-weight:800;margin-bottom:8px;">Penilaian Diri ADHD</h1>
+        <p style="opacity:0.8;font-size:14px;">Kenali caramu memproses dunia dengan CAARS–S:L.</p>
+      </div>
+
+      <div class="bento-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+        <div style="width:44px;height:44px;border-radius:12px;background:var(--teal-light);display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4 style="font-size:14px;font-weight:800;margin-bottom:4px;">10 Menit</h4>
+        <p style="font-size:12px;color:var(--muted);">Terbagi dalam sesi kecil</p>
+      </div>
+
+      <div class="bento-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+        <div style="width:44px;height:44px;border-radius:12px;background:var(--teal-light);display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        </div>
+        <h4 style="font-size:14px;font-weight:800;margin-bottom:4px;">Auto-Save</h4>
+        <p style="font-size:12px;color:var(--muted);">Data tersimpan di perangkatmu</p>
+      </div>
+
+      <div class="bento-card bento-span-2" style="background:rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.3);">
+        <h4 style="font-size:14px;font-weight:800;color:var(--accent);margin-bottom:6px;">Ini Bukan Diagnosis Medis</h4>
+        <p style="font-size:13px;color:var(--muted);">Ini adalah alat skrining untuk memahami diri sendiri. Hasilnya sangat berguna untuk dibawa ke psikolog atau psikiater dan tidak menggantikan penilaian klinis yang sesungguhnya.</p>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="goToDemo()" style="padding:18px;">
+      <span>Lanjut ke Data Diri</span>
+      <span>&#8594;</span>
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 2: DEMOGRAPHICS -->
+<div id="screen-demo" class="screen">
+  <div class="container">
+    <div style="margin-bottom:28px">
+      <div class="badge">LANGKAH 1 DARI 11</div>
+      <h2 style="font-size:24px;font-weight:800;color:var(--navy);margin-top:10px;">Data Diri</h2>
+      <p style="font-size:13px;color:var(--muted);margin-top:6px;">Digunakan untuk menentukan profil normatif yang tepat</p>
+    </div>
+
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Nama (opsional)</label>
+        <input type="text" class="form-input" id="inputName" placeholder="Nama kamu..." />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Jenis Kelamin</label>
+        <div class="gender-group">
+          <button class="gender-btn" id="genderM" onclick="selectGender('M')">
+            <span class="g-icon">&#9794;</span>
+            <span>Laki-laki</span>
+          </button>
+          <button class="gender-btn" id="genderF" onclick="selectGender('F')">
+            <span class="g-icon">&#9792;</span>
+            <span>Perempuan</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Kelompok Usia</label>
+        <div class="age-group-grid">
+          <button class="age-btn" id="age1" onclick="selectAge('1','18–29 thn')">18–29<br>tahun</button>
+          <button class="age-btn" id="age2" onclick="selectAge('2','30–39 thn')">30–39<br>tahun</button>
+          <button class="age-btn" id="age3" onclick="selectAge('3','40–49 thn')">40–49<br>tahun</button>
+          <button class="age-btn" id="age4" onclick="selectAge('4','&#8805;50 thn')">&ge;50<br>tahun</button>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Tanggal Hari Ini</label>
+        <input type="date" class="form-input" id="inputDate" />
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startQuestions()" id="btnStartQ">
+      <span>Lanjut ke Pertanyaan</span>
+      <span>&#8594;</span>
+    </button>
+    <div id="demoError" style="color:var(--coral);font-size:13px;margin-top:10px;display:none;">
+      Mohon pilih jenis kelamin dan kelompok usia terlebih dahulu.
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: QUESTIONS -->
+<div id="screen-questions" class="screen">
+  <div class="container" id="questionContainer"></div>
+  <div class="nav-footer">
+    <div class="nav-count">
+      Dijawab: <strong id="answeredCount">0</strong> / 66
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-nav ghost" id="btnPrev" onclick="prevPage()">&#8592; Sebelumnya</button>
+      <button class="btn btn-nav" id="btnNext" onclick="nextPage()">Berikutnya &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 4: RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="container" id="resultsContainer"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// ═══════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════
+function updateThemeIcon() {
+  const isDark = document.body.classList.contains('dark-mode') ||
+    (!document.body.classList.contains('light-mode') &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches);
+  document.getElementById('iconSun').style.display = isDark ? 'block' : 'none';
+  document.getElementById('iconMoon').style.display = isDark ? 'none' : 'block';
+}
+
+function toggleTheme() {
+  const body = document.body;
+  if (body.classList.contains('dark-mode')) {
+    body.classList.remove('dark-mode');
+    body.classList.add('light-mode');
+    localStorage.setItem('caars_theme', 'light');
+  } else if (body.classList.contains('light-mode')) {
+    body.classList.remove('light-mode');
+    body.classList.add('dark-mode');
+    localStorage.setItem('caars_theme', 'dark');
+  } else {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      body.classList.add('light-mode');
+      localStorage.setItem('caars_theme', 'light');
+    } else {
+      body.classList.add('dark-mode');
+      localStorage.setItem('caars_theme', 'dark');
+    }
+  }
+  updateThemeIcon();
+}
+
+const savedTheme = localStorage.getItem('caars_theme');
+if (savedTheme) document.body.classList.add(savedTheme + '-mode');
+updateThemeIcon();
+
+// ═══════════════════════════════════════
+// DATA — 66 ITEMS
+// ═══════════════════════════════════════
+const items = [
+  "Saya suka melakukan hal-hal yang aktif.",
+  "Saya kehilangan barang-barang yang diperlukan untuk tugas atau kegiatan (misalnya, daftar to-do, pensil, buku, atau alat).",
+  "Saya tidak merencanakan ke depan.",
+  "Saya berbicara tanpa pikir panjang.",
+  "Saya seorang pengambil risiko atau penyuka tantangan.",
+  "Saya sering meremehkan atau merendahkan diri sendiri.",
+  "Saya tidak menyelesaikan hal-hal yang sudah saya mulai.",
+  "Saya mudah frustrasi.",
+  "Saya terlalu banyak bicara.",
+  "Saya selalu aktif bergerak, seolah-olah digerakkan oleh mesin.",
+  "Saya tidak terorganisir.",
+  "Saya mengatakan sesuatu tanpa berpikir terlebih dahulu.",
+  "Sulit bagi saya untuk tinggal di satu tempat dalam waktu yang lama.",
+  "Saya kesulitan melakukan kegiatan santai dengan tenang.",
+  "Saya tidak yakin dengan diri saya sendiri.",
+  "Sulit bagi saya untuk memantau beberapa hal sekaligus.",
+  "Saya selalu bergerak meskipun seharusnya diam.",
+  "Saya sering lupa hal-hal yang harus saya ingat.",
+  "Saya mudah marah atau cepat panas.",
+  "Saya mudah bosan.",
+  "Saya meninggalkan tempat duduk ketika seharusnya tetap duduk.",
+  "Saya kesulitan mengantre atau menunggu giliran bersama orang lain.",
+  "Saya masih sering meledak atau mengamuk.",
+  "Saya kesulitan mempertahankan konsentrasi saat bekerja.",
+  "Saya mencari kegiatan yang serba cepat dan menyenangkan.",
+  "Saya menghindari tantangan baru karena kurang percaya pada kemampuan saya.",
+  "Saya gelisah bahkan saat sedang duduk dengan tenang.",
+  "Hal-hal yang saya dengar atau lihat mengalihkan perhatian dari apa yang sedang saya lakukan.",
+  "Saya pelupa dalam kegiatan sehari-hari.",
+  "Banyak hal yang dengan mudah membuat saya kesal.",
+  "Saya tidak menyukai kegiatan yang tenang dan introspektif.",
+  "Saya sering kehilangan barang-barang yang saya butuhkan.",
+  "Saya kesulitan mendengarkan apa yang dikatakan orang lain.",
+  "Saya adalah seseorang yang tidak mencapai potensi penuh.",
+  "Saya menyela orang lain saat mereka berbicara.",
+  "Saya mengubah rencana atau pekerjaan di tengah jalan.",
+  "Saya terlihat baik-baik saja di luar, tetapi di dalam saya sebenarnya tidak yakin dengan diri sendiri.",
+  "Saya selalu bergerak ke sana ke mari.",
+  "Saya membuat komentar atau pernyataan yang kemudian saya sesali.",
+  "Saya tidak bisa menyelesaikan sesuatu kecuali ada tenggat waktu yang mutlak.",
+  "Saya gelisah (menggerakkan tangan atau kaki) atau menggeliat di tempat duduk.",
+  "Saya membuat kesalahan ceroboh atau kesulitan memperhatikan detail.",
+  "Saya tidak sengaja mengganggu atau menyulitkan orang lain.",
+  "Saya kesulitan memulai suatu tugas.",
+  "Saya ikut campur dalam kegiatan orang lain.",
+  "Perlu usaha besar bagi saya untuk duduk dengan tenang.",
+  "Suasana hati saya tidak menentu (berubah-ubah).",
+  "Saya tidak menyukai pekerjaan rumah atau tugas yang mengharuskan banyak berpikir.",
+  "Saya lalai dalam kegiatan sehari-hari.",
+  "Saya gelisah atau terlalu aktif.",
+  "Saya bergantung pada orang lain untuk mengatur kehidupan saya dan memperhatikan detail.",
+  "Saya tanpa sengaja mengganggu atau merepotkan orang lain.",
+  "Terkadang perhatian saya menyempit sehingga saya tidak menyadari hal-hal lain; terkadang begitu luas sehingga segalanya mengalihkan perhatian saya.",
+  "Saya cenderung menggeliat atau tidak bisa diam.",
+  "Saya tidak bisa fokus pada sesuatu kecuali itu benar-benar menarik bagi saya.",
+  "Saya berharap memiliki kepercayaan diri yang lebih besar dalam kemampuan saya.",
+  "Saya tidak bisa duduk diam dalam waktu yang lama.",
+  "Saya menjawab pertanyaan sebelum pertanyaan tersebut selesai diajukan.",
+  "Saya lebih suka bergerak dan berpindah daripada diam di satu tempat.",
+  "Saya kesulitan menyelesaikan tugas pekerjaan atau sekolah.",
+  "Saya mudah tersinggung.",
+  "Saya menyela orang lain ketika mereka sedang bekerja atau bermain.",
+  "Kegagalan di masa lalu membuat saya sulit untuk mempercayai kemampuan diri sendiri.",
+  "Saya mudah terganggu ketika ada hal-hal yang terjadi di sekitar saya.",
+  "Saya kesulitan mengorganisir tugas dan kegiatan saya.",
+  "Saya salah memperkirakan berapa lama waktu yang dibutuhkan untuk melakukan sesuatu atau pergi ke suatu tempat."
+];
+
+// ═══════════════════════════════════════
+// SUBSCALES
+// ═══════════════════════════════════════
+const subscales = {
+  A: {
+    name: "Inatensi & Masalah Memori", label: "A",
+    items: [2,7,16,18,24,28,29,32,49,51,64,65],
+    desc: "Kesulitan mempertahankan perhatian, sering lupa, dan kehilangan barang."
+  },
+  B: {
+    name: "Hiperaktivitas & Kegelisahan", label: "B",
+    items: [1,10,13,17,21,38,41,46,50,57,59],
+    desc: "Kecenderungan untuk selalu bergerak, kesulitan duduk diam, dan perasaan terus-menerus aktif."
+  },
+  C: {
+    name: "Impulsivitas & Labilitas Emosional", label: "C",
+    items: [3,4,8,12,19,20,23,30,47,61],
+    desc: "Bertindak atau berbicara tanpa pikir panjang, mudah marah, dan suasana hati yang berfluktuasi."
+  },
+  D: {
+    name: "Masalah Konsep Diri", label: "D",
+    items: [6,15,26,34,37,56,63],
+    desc: "Kepercayaan diri yang rendah, merasa tidak mencapai potensi, dan rasa tidak aman tentang kemampuan diri."
+  },
+  E: {
+    name: "Gejala Inatentif DSM-IV", label: "E",
+    items: [2,7,16,24,28,42,49,64,65],
+    desc: "Kriteria DSM-IV untuk ADHD tipe inatentif: kesulitan berkonsentrasi, pelupa, mudah terganggu."
+  },
+  F: {
+    name: "Gejala Hiperaktif-Impulsif DSM-IV", label: "F",
+    items: [4,9,12,21,22,35,41,58],
+    desc: "Kriteria DSM-IV untuk ADHD tipe hiperaktif-impulsif: tidak bisa diam, menyela, berbicara berlebihan."
+  },
+  H: {
+    name: "Indeks ADHD", label: "H",
+    items: [1,4,10,11,20,24,27,33,38,40,42,44,48,52,53,62],
+    desc: "Indeks gabungan yang paling sensitif dan spesifik untuk mendeteksi ADHD dewasa secara keseluruhan."
+  }
+};
+
+const pages = [
+  { title: "Sesi 1", items: [1,2,3,4,5,6] },
+  { title: "Sesi 2", items: [7,8,9,10,11,12] },
+  { title: "Sesi 3", items: [13,14,15,16,17,18] },
+  { title: "Sesi 4", items: [19,20,21,22,23,24] },
+  { title: "Sesi 5", items: [25,26,27,28,29,30] },
+  { title: "Sesi 6", items: [31,32,33,34,35,36] },
+  { title: "Sesi 7", items: [37,38,39,40,41,42] },
+  { title: "Sesi 8", items: [43,44,45,46,47,48] },
+  { title: "Sesi 9", items: [49,50,51,52,53,54] },
+  { title: "Sesi 10", items: [55,56,57,58,59,60] },
+  { title: "Sesi 11", items: [61,62,63,64,65,66] }
+];
+
+const scaleLabels = [
+  { num: "0", text: "Tidak pernah" },
+  { num: "1", text: "Jarang" },
+  { num: "2", text: "Cukup sering" },
+  { num: "3", text: "Sangat sering" }
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let state = {
+  name: '', gender: '', ageGroup: '', ageLabel: '',
+  date: '', answers: {}, currentPage: 0
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('caars_state');
+    if (saved) state = { ...state, ...JSON.parse(saved) };
+  } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem('caars_state', JSON.stringify(state)); } catch(e) {}
+}
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function handleBack() {
+  const active = document.querySelector('.screen.active');
+  if (!active) return;
+  const id = active.id;
+  if (id === 'screen-splash') return;
+  if (id === 'screen-menu') { showScreen('screen-splash'); return; }
+  if (id === 'screen-disclaimer') { showScreen('screen-menu'); return; }
+  if (id === 'screen-demo') { showScreen('screen-disclaimer'); return; }
+  if (id === 'screen-questions') {
+    if (!confirm('Kembali ke beranda? Progres kamu tersimpan dan bisa dilanjutkan nanti.')) return;
+    showScreen('screen-splash');
+    document.getElementById('topbarProgress').style.display = 'none';
+    return;
+  }
+  if (id === 'screen-results') { showScreen('screen-splash'); return; }
+}
+
+function goToDemo() {
+  showScreen('screen-demo');
+  document.getElementById('inputDate').value = new Date().toISOString().split('T')[0];
+  if (state.gender) document.getElementById('gender' + state.gender).classList.add('selected');
+  if (state.ageGroup) document.getElementById('age' + state.ageGroup).classList.add('selected');
+  if (state.name) document.getElementById('inputName').value = state.name;
+}
+
+function selectGender(g) {
+  state.gender = g;
+  document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('gender' + g).classList.add('selected');
+  saveState();
+}
+
+function selectAge(num, label) {
+  state.ageGroup = num;
+  state.ageLabel = label;
+  document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('age' + num).classList.add('selected');
+  saveState();
+}
+
+function startQuestions() {
+  if (!state.gender || !state.ageGroup) {
+    document.getElementById('demoError').style.display = 'block';
+    return;
+  }
+  state.name = document.getElementById('inputName').value.trim();
+  state.date = document.getElementById('inputDate').value;
+  saveState();
+  document.getElementById('demoError').style.display = 'none';
+  showScreen('screen-questions');
+  document.getElementById('topbarProgress').style.display = 'flex';
+  renderPage();
+}
+
+// --- DEV MODE: FUNGSI AUTO FILL ---
+function autoFillRandom() {
+  if (!confirm('⚡ Dev Mode: Isi otomatis seluruh data & 66 pertanyaan secara acak lalu lihat laporan?')) return;
+
+  // 1. Bypass & isi Data Demografi Acak
+  state.name = "Tester Random " + Math.floor(Math.random() * 1000);
+  state.gender = Math.random() > 0.5 ? 'M' : 'F';
+  state.ageGroup = String(Math.floor(Math.random() * 4) + 1);
+  state.ageLabel = 'Dev Test Age';
+  state.date = new Date().toISOString().split('T')[0];
+
+  // Update elemen UI jika sedang di halaman demo
+  const elName = document.getElementById('inputName');
+  if(elName) elName.value = state.name;
+  const elDate = document.getElementById('inputDate');
+  if(elDate) elDate.value = state.date;
+
+  // 2. Isi seluruh 66 Pertanyaan secara acak (Skor 0 - 3)
+  for (let i = 1; i <= 66; i++) {
+    state.answers[i] = Math.floor(Math.random() * 4);
+  }
+
+  // 3. Simpan state dan set ke halaman terakhir
+  state.currentPage = pages.length - 1;
+  saveState();
+
+  // 4. Langsung render hasil laporan
+  showResults();
+}
+// ----------------------------------
+
+function startFresh() {
+  state = { name:'', gender:'', ageGroup:'', ageLabel:'', date:'', answers:{}, currentPage:0 };
+  saveState();
+  const card = document.getElementById('resumeCard');
+  if (card) card.remove();
+}
+
+function resumeSession() {
+  showScreen('screen-questions');
+  document.getElementById('topbarProgress').style.display = 'flex';
+  renderPage();
+}
+
+// ═══════════════════════════════════════
+// QUESTION RENDERING
+// ═══════════════════════════════════════
+const svgIcons = [
+  `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="4 4"/><circle cx="12" cy="12" r="2" fill="#9CA3AF"/></svg>`,
+  `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#60A5FA" stroke-width="2"/><path d="M7 12H10L11.5 9L12.5 15L14 12H17" stroke="#60A5FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#F59E0B" stroke-width="2"/><path d="M6 12H8L9.5 7L12 17L14.5 7L16 12H18" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="#EF4444"/><path d="M12 2V4M12 20V22M4 12H2M22 12H20M5.5 5.5L7 7M17 17L18.5 18.5M18.5 5.5L17 7M7 17L5.5 18.5" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/></svg>`
+];
+
+function renderPage() {
+  const pg = pages[state.currentPage];
+  const container = document.getElementById('questionContainer');
+
+  let html = `
+    <div class="section-header">
+      <div class="section-num">${state.currentPage + 1}</div>
+      <div class="section-info">
+        <h2>${pg.title} dari ${pages.length}</h2>
+        <p>${pg.items.length} pertanyaan &bull; Pilih yang paling menggambarkan dirimu</p>
+      </div>
+    </div>
+    <div class="scale-legend">
+      ${scaleLabels.map(l => `
+        <div class="scale-leg-item">
+          <div class="scale-leg-num">${l.num}</div>
+          <div class="scale-leg-text">${l.text}</div>
+        </div>`).join('')}
+    </div>`;
+
+  pg.items.forEach(itemNum => {
+    const answered = state.answers[itemNum] !== undefined;
+    const val = state.answers[itemNum];
+    html += `
+      <div class="question-card ${answered ? 'answered' : ''}" id="qcard-${itemNum}">
+        <div class="q-header">
+          <span class="q-num">#${itemNum}</span>
+          <span class="q-text">${items[itemNum - 1]}</span>
+        </div>
+        <div class="q-options ${answered ? 'has-selection' : ''}" id="qopts-${itemNum}">
+          ${[0,1,2,3].map(v => `
+            <div class="q-opt ${answered && val === v ? 'selected-' + v : ''}" onclick="setAnswer(${itemNum}, ${v})">
+              <div class="q-opt-icon">${svgIcons[v]}</div>
+              <div class="q-opt-text">${scaleLabels[v].text}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  });
+
+  container.innerHTML = html;
+  updateProgress();
+  updateNavButtons();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setAnswer(itemNum, value) {
+  state.answers[itemNum] = value;
+  saveState();
+  const card = document.getElementById('qcard-' + itemNum);
+  card.classList.add('answered');
+  const optsContainer = document.getElementById('qopts-' + itemNum);
+  optsContainer.classList.add('has-selection');
+  card.querySelectorAll('.q-opt').forEach((opt, i) => {
+    opt.className = 'q-opt';
+    if (i === value) opt.className = 'q-opt selected-' + value;
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = Object.keys(state.answers).length;
+  const pct = Math.round((total / 66) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = total + ' / 66';
+  document.getElementById('answeredCount').textContent = total;
+}
+
+function updateNavButtons() {
+  document.getElementById('btnPrev').style.display = state.currentPage === 0 ? 'none' : 'inline-flex';
+  const isLast = state.currentPage === pages.length - 1;
+  document.getElementById('btnNext').textContent = isLast ? 'Lihat Hasil \u2192' : 'Berikutnya \u2192';
+}
+
+function nextPage() {
+  const pg = pages[state.currentPage];
+  const unanswered = pg.items.filter(n => state.answers[n] === undefined);
+  if (unanswered.length > 0) {
+    unanswered.forEach(n => {
+      const card = document.getElementById('qcard-' + n);
+      card.style.border = '2px solid var(--coral)';
+      card.style.background = 'rgba(239,68,68,0.06)';
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    setTimeout(() => {
+      unanswered.forEach(n => {
+        const card = document.getElementById('qcard-' + n);
+        if (card) { card.style.border = ''; card.style.background = ''; }
+      });
+    }, 2500);
+    return;
+  }
+  if (state.currentPage < pages.length - 1) {
+    state.currentPage++;
+    saveState();
+    renderPage();
+  } else {
+    showResults();
+  }
+}
+
+function prevPage() {
+  if (state.currentPage > 0) {
+    state.currentPage--;
+    saveState();
+    renderPage();
+  }
+}
+
+// ═══════════════════════════════════════
+// SCORING
+// ═══════════════════════════════════════
+function getLevelFromMean(mean) {
+  const pct = null; // computed separately
+  if (mean < 1.0) return { level: 'low', levelLabel: 'Rendah', levelColor: '#10B981' };
+  if (mean < 1.5) return { level: 'avg', levelLabel: 'Rata-rata', levelColor: '#3B82F6' };
+  if (mean < 2.0) return { level: 'high', levelLabel: 'Tinggi', levelColor: '#F59E0B' };
+  return { level: 'vhigh', levelLabel: 'Sangat Tinggi', levelColor: '#EF4444' };
+}
+
+function computeScores() {
+  const results = {};
+  Object.entries(subscales).forEach(([key, ss]) => {
+    const raw = ss.items.reduce((sum, i) => sum + (state.answers[i] || 0), 0);
+    const max = ss.items.length * 3;
+    const mean = raw / ss.items.length;
+    const pct = Math.round((raw / max) * 100);
+    const lvl = getLevelFromMean(mean);
+    results[key] = { raw, max, mean: mean.toFixed(2), pct, ...lvl, ...ss };
+  });
+  // Subscale G: DSM-IV Total (union of E + F items)
+  const gRaw = results['E'].raw + results['F'].raw;
+  const gN   = results['E'].items.length + results['F'].items.length;
+  const gMax  = gN * 3;
+  const gMean = gRaw / gN;
+  const gPct  = Math.round((gRaw / gMax) * 100);
+  const gLvl  = getLevelFromMean(gMean);
+  results['G'] = {
+    name: 'Total Gejala ADHD DSM-IV', label: 'G',
+    items: [...results['E'].items, ...results['F'].items],
+    desc: 'Gabungan subskala E dan F — total gejala yang sesuai kriteria DSM-IV untuk ADHD.',
+    raw: gRaw, max: gMax, mean: gMean.toFixed(2), pct: gPct, ...gLvl
+  };
+  return results;
+}
+
+// ═══════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════
+function showResults() {
+  const scores = computeScores();
+  const container = document.getElementById('resultsContainer');
+
+  // — Subtype determination —
+  const eEl = scores['E'].level === 'high' || scores['E'].level === 'vhigh';
+  const fEl = scores['F'].level === 'high' || scores['F'].level === 'vhigh';
+  const hEl = scores['H'].level === 'high' || scores['H'].level === 'vhigh';
+  const hVh = scores['H'].level === 'vhigh';
+
+  let subtypeLabel, subtypeDesc, subtypeBg, subtypeBorder, subtypeTextColor;
+  if (eEl && fEl) {
+    subtypeLabel = 'Tipe Kombinasi';
+    subtypeDesc = 'Kamu menunjukkan pola kedua dimensi ADHD secara bersamaan — kesulitan mempertahankan perhatian sekaligus kecenderungan hiperaktif dan impulsif. Ini adalah profil yang paling umum dijumpai pada orang dewasa dengan ADHD, dan seringkali yang paling berdampak dalam kehidupan sehari-hari karena kedua sistem ini saling memperparah.';
+    subtypeBg = 'rgba(124,58,237,0.07)'; subtypeBorder = 'rgba(124,58,237,0.35)'; subtypeTextColor = '#5B21B6';
+  } else if (eEl) {
+    subtypeLabel = 'Predominantly Inattentive';
+    subtypeDesc = 'Pola kamu lebih banyak mengarah ke kesulitan perhatian dan memori — bukan pada hiperaktivitas fisik yang terlihat. Ini adalah tipe yang paling sering tidak terdiagnosis, terutama pada perempuan dan orang dewasa, karena gejalanya lebih "senyap" namun dampaknya sama nyata: prokrastinasi, kehilangan benda, sulit menyelesaikan tugas.';
+    subtypeBg = 'rgba(59,130,246,0.07)'; subtypeBorder = 'rgba(59,130,246,0.35)'; subtypeTextColor = '#1E40AF';
+  } else if (fEl) {
+    subtypeLabel = 'Predominantly Hyperactive-Impulsive';
+    subtypeDesc = 'Pola kamu lebih dominan pada hiperaktivitas dan impulsivitas. Energi yang tinggi, sulit menunggu, berbicara sebelum berpikir — ini adalah cara otakmu mencari stimulasi. Pada orang dewasa, hiperaktivitas sering bermanifestasi lebih ke dalam sebagai kegelisahan internal atau pikiran yang terus berlari.';
+    subtypeBg = 'rgba(249,115,22,0.07)'; subtypeBorder = 'rgba(249,115,22,0.35)'; subtypeTextColor = '#C2410C';
+  } else if (hEl) {
+    subtypeLabel = 'Indeks Terpengaruh — Subklinis';
+    subtypeDesc = 'Subskala individual tidak mencapai ambang yang signifikan secara klinis, namun Indeks ADHD gabungan menunjukkan adanya pola yang layak diperhatikan. Ini bisa berarti gejala tersebar merata, atau bahwa kamu telah mengembangkan strategi kompensasi yang efektif selama bertahun-tahun. Diskusi dengan profesional akan memberikan gambaran yang lebih lengkap.';
+    subtypeBg = 'rgba(245,158,11,0.07)'; subtypeBorder = 'rgba(245,158,11,0.35)'; subtypeTextColor = '#92400E';
+  } else {
+    subtypeLabel = 'Tidak Signifikan Secara Klinis';
+    subtypeDesc = 'Berdasarkan respons kamu, gejala yang dilaporkan berada di rentang yang umum dialami kebanyakan orang saat ini. Bukan berarti kamu tidak pernah menghadapi tantangan — hanya saja pola spesifik ADHD tidak teridentifikasi kuat dalam asesmen ini. Jika kamu masih merasa ada sesuatu yang tidak pas, berbicara dengan profesional tetap langkah yang valid.';
+    subtypeBg = 'rgba(34,197,94,0.07)'; subtypeBorder = 'rgba(34,197,94,0.35)'; subtypeTextColor = '#065F46';
+  }
+
+  // — Overall message —
+  let overallMsg;
+  if (hVh) {
+    overallMsg = 'Terima kasih sudah meluangkan waktu untuk menyelesaikan ini — itu sendiri sudah butuh fokus dan keberanian. Skor kamu menunjukkan kecenderungan yang cukup kuat. Memiliki pola seperti ini bukan berarti ada yang rusak dengan dirimu; otakmu hanya bekerja dengan cara yang berbeda. Langkah berikutnya yang paling bermanfaat adalah membawa hasil ini ke psikolog atau psikiater yang berpengalaman dengan ADHD dewasa.';
+  } else if (scores['H'].level === 'high') {
+    overallMsg = 'Terima kasih sudah menyelesaikan asesmen ini. Skor kamu menunjukkan beberapa tantangan yang bermakna — pola yang sering ditemui pada individu neurodivergent. Ini adalah momen yang baik untuk mulai mengeksplorasi dukungan profesional, bukan karena ada yang salah, tetapi untuk menemukan strategi yang benar-benar cocok dengan cara kerja otakmu.';
+  } else if (scores['H'].level === 'avg') {
+    overallMsg = 'Kamu sudah menyelesaikan asesmen ini dengan tuntas. Skormu berada di tengah — kamu mungkin merasakan beberapa tantangan sesekali, dan itu wajar dialami banyak orang. Perhatikan pola yang terasa paling mengganggu dan jangan ragu mencari dukungan jika hal itu mulai berdampak signifikan.';
+  } else {
+    overallMsg = 'Kamu sudah menyelesaikan asesmen ini. Skor kamu menunjukkan pola yang relatif stabil — gejala terkait ADHD tampak minimal saat ini. Terus rawat kesehatanmu dan pertahankan rutinitas yang sudah berjalan baik. Jika ada hal yang masih terasa mengganjal, berbicara dengan profesional selalu menjadi pilihan yang terbuka.';
+  }
+
+  const dateStr = state.date
+    ? new Date(state.date).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'})
+    : '-';
+  const safeName = escapeHtml(state.name);
+
+  let html = `
+    <div class="results-hero">
+      <div class="results-hero-eyebrow">Laporan Asesmen Diri</div>
+      <h2>Profil${safeName ? ' ' + safeName : ' Kamu'}</h2>
+      <div class="hero-date">${dateStr} &bull; CAARS&ndash;S:L</div>
+    </div>
+
+    <div class="subtype-card" style="background:${subtypeBg};border-color:${subtypeBorder};color:var(--text);">
+      <div class="subtype-card-label" style="color:${subtypeTextColor};">Profil yang Teridentifikasi</div>
+      <div class="subtype-card-title" style="color:${subtypeTextColor};">${subtypeLabel}</div>
+      <div class="subtype-card-desc">${subtypeDesc}</div>
+    </div>
+
+    <div class="bento-card bento-span-2" style="background:rgba(124,58,237,0.05);border-color:rgba(124,58,237,0.2);margin-bottom:24px;">
+      <h3 style="font-weight:800;color:var(--primary);margin-bottom:8px;font-size:16px;">Ringkasan</h3>
+      <p style="font-size:14px;line-height:1.7;color:var(--text);">${overallMsg}</p>
+    </div>
+
+    <h3 style="font-size:18px;font-weight:800;margin-bottom:16px;color:var(--text);">Status Subskala Klinis</h3>
+    <div class="bento-grid">`;
+
+  // Subscale cards A–F
+  ['A','B','C','D','E','F'].forEach(key => {
+    const s = scores[key];
+    const pct = Math.round((s.raw / s.max) * 100);
+    html += `
+      <div class="bento-card" style="padding:20px;display:flex;flex-direction:column;">
+        <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">SUBSKALA ${s.label}</div>
+        <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.3;">${s.name}</div>
+        <div class="skill-bar-wrap">
+          <div class="skill-bar-fill bar-${s.level}" style="width:${pct}%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;">
+          <span style="font-size:18px;font-weight:900;color:var(--text);">${s.raw} <span style="font-size:12px;color:var(--muted);font-weight:700;">/ ${s.max}</span></span>
+          <span style="font-size:11px;font-weight:800;background:var(--bg);border:2px solid var(--border);padding:4px 8px;border-radius:8px;color:var(--muted);">${s.levelLabel}</span>
+        </div>
+      </div>`;
+  });
+
+  // Subscale G and H — full width
+  ['G','H'].forEach(key => {
+    const s = scores[key];
+    const pct = Math.round((s.raw / s.max) * 100);
+    const isH = key === 'H';
+    html += `
+      <div class="bento-card bento-span-2" style="padding:24px;${isH ? 'border-width:3px;border-color:var(--primary);' : ''}">
+        <div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;">
+          <div style="width:52px;height:52px;background:var(--bg);display:flex;align-items:center;justify-content:center;border-radius:14px;border:2px solid var(--border);font-size:18px;font-weight:900;color:var(--primary);">${s.label}</div>
+          <div>
+            <div style="font-size:11px;font-weight:900;color:var(--muted);letter-spacing:1px;">SUBSKALA ${s.label}${isH ? ' &mdash; INDEKS UTAMA' : ''}</div>
+            <div style="font-size:16px;font-weight:800;color:var(--text);">${s.name}</div>
+          </div>
+        </div>
+        <div class="skill-bar-wrap" style="height:24px;">
+          <div class="skill-bar-fill bar-${s.level}" style="width:${pct}%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+          <span style="font-size:24px;font-weight:900;color:var(--text);">${s.raw} <span style="font-size:14px;color:var(--muted);font-weight:700;">/ ${s.max}</span></span>
+          <span style="font-size:13px;font-weight:800;background:var(--bg);border:2px solid var(--border);padding:6px 12px;border-radius:10px;color:var(--text);">${s.levelLabel}</span>
+        </div>
+      </div>`;
+  });
+
+  html += `</div>`; // close subscale grid
+
+  // — Insight Detail — narrative, not repetitive cards
+  html += `<h3 style="font-size:18px;font-weight:800;margin:24px 0 8px;color:var(--text);">Insight Detail</h3>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Bagian ini menjelaskan apa artinya setiap subskala dalam konteks kehidupan sehari-hari, dan bagaimana mereka saling berkaitan.</p>`;
+
+  // Group narrative by clinical relevance
+  const keyGroups = [
+    { keys: ['E','F','G'], title: 'Dimensi DSM-IV', intro: 'Tiga subskala ini paling langsung mencerminkan kriteria diagnostik formal ADHD.' },
+    { keys: ['A','B','C'], title: 'Dimensi Klinis Luas', intro: 'Subskala ini menangkap gejala yang lebih luas dari sekadar kriteria DSM-IV, termasuk dampak pada memori, energi, dan regulasi emosi.' },
+    { keys: ['D','H'], title: 'Dimensi Komposit', intro: 'Subskala konsep diri dan indeks gabungan seringkali menjadi yang paling prediktif terhadap dampak ADHD dalam kehidupan nyata.' }
+  ];
+
+  keyGroups.forEach(group => {
+    html += `<p style="font-size:12px;font-weight:800;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin:20px 0 10px;">${group.title}</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6;">${group.intro}</p>`;
+    group.keys.forEach(key => {
+      const s = scores[key];
+      let dotColor = '#22C55E';
+      if (s.level === 'vhigh') dotColor = '#EF4444';
+      else if (s.level === 'high') dotColor = '#F59E0B';
+      else if (s.level === 'avg') dotColor = '#3B82F6';
+
+      let interpText = '';
+      if (s.level === 'low') interpText = `Skor kamu di sini berada di rentang rendah — gejala dalam batas yang umum. ${s.desc}`;
+      else if (s.level === 'avg') interpText = `Skor berada di rentang rata-rata. Ada kemungkinan kamu mengalami tantangan ini sesekali, namun tidak sampai mengganggu secara signifikan. ${s.desc}`;
+      else if (s.level === 'high') interpText = `Skor di level ini menunjukkan kesulitan yang bermakna dan konsisten — sesuatu yang perlu diperhatikan, bukan dikesampingkan. ${s.desc}`;
+      else interpText = `Skor di level ini signifikan secara klinis. Ini bukan kelemahan karakter; ini adalah pola neurologis yang bisa dipahami dan dikelola dengan dukungan yang tepat. ${s.desc}`;
+
+      html += `
+        <div class="insight-card">
+          <div class="insight-dot" style="background:${dotColor};box-shadow:0 0 8px ${dotColor}80;"></div>
+          <div>
+            <div class="insight-label">Subskala ${s.label} &mdash; ${s.name} <span style="font-weight:600;opacity:0.6;font-size:12px;">&bull; ${s.levelLabel}</span></div>
+            <div class="insight-body">${interpText}</div>
+          </div>
+        </div>`;
+    });
+  });
+
+  // — Referral & Next Steps —
+  const showCrisis = hEl;
+  html += `
+    <div class="referral-section">
+      <h3>Langkah Selanjutnya</h3>
+      <p class="section-sub">Asesmen adalah titik awal, bukan akhir. Berikut panduan konkret untuk melanjutkan perjalananmu — sesuai kebutuhanmu saat ini.</p>
+      <div class="referral-cards">
+
+        <div class="referral-card">
+          <div class="referral-card-header">
+            <div class="referral-card-title">Sebelum Menemui Profesional</div>
+            <span class="referral-card-tag" style="background:rgba(124,58,237,0.1);color:#5B21B6;">Persiapan</span>
+          </div>
+          <div class="referral-card-desc">Tiga hal yang akan membuat sesi pertama kamu jauh lebih produktif: (1) Print atau screenshot hasil ini. (2) Catat tiga situasi konkret di mana gejalamu paling terasa — kapan, di mana, apa dampaknya. (3) Pikirkan sejak kapan pola ini ada — apakah sudah dari masa kecil? Informasi ini membantu psikolog membangun gambaran yang lebih lengkap.</div>
+        </div>
+
+        <div class="referral-card">
+          <div class="referral-card-header">
+            <div class="referral-card-title">Konsultasi Online — Psikolog &amp; Psikiater</div>
+            <span class="referral-card-tag" style="background:rgba(59,130,246,0.1);color:#1E40AF;">Akses Cepat</span>
+          </div>
+          <div class="referral-card-desc">Platform telemedicine berikut menyediakan psikolog dan psikiater berlisensi yang bisa kamu temui dari rumah. Beberapa menerima BPJS.</div>
+          <div class="referral-links">
+            <a class="referral-link" href="https://www.halodoc.com/konsultasi-dokter/psikolog-dan-psikiater" target="_blank" rel="noopener" style="color:#1D9E75;border-color:#1D9E75;background:rgba(29,158,117,0.07);">Halodoc &rarr;</a>
+            <a class="referral-link" href="https://www.alodokter.com/cari-dokter/psikiater" target="_blank" rel="noopener" style="color:#0066CC;border-color:#0066CC;background:rgba(0,102,204,0.07);">Alodokter &rarr;</a>
+            <a class="referral-link" href="https://www.klikdokter.com/spesialis/psikiater" target="_blank" rel="noopener" style="color:#E05A00;border-color:#E05A00;background:rgba(224,90,0,0.07);">KlikDokter &rarr;</a>
+          </div>
+        </div>
+
+        <div class="referral-card">
+          <div class="referral-card-header">
+            <div class="referral-card-title">Cari Profesional Kesehatan Jiwa</div>
+            <span class="referral-card-tag" style="background:rgba(34,197,94,0.1);color:#065F46;">Direktori Resmi</span>
+          </div>
+          <div class="referral-card-desc">Gunakan direktori resmi untuk menemukan psikolog atau psikiater berpengalaman yang terdaftar secara legal di Indonesia.</div>
+          <div class="referral-links">
+            <a class="referral-link" href="https://pdskji.org/home" target="_blank" rel="noopener" style="color:#5B21B6;border-color:#5B21B6;background:rgba(91,33,182,0.07);">PDSKJI (Psikiater) &rarr;</a>
+            <a class="referral-link" href="https://himpsi.or.id/" target="_blank" rel="noopener" style="color:#0C447C;border-color:#0C447C;background:rgba(12,68,124,0.07);">HIMPSI (Psikolog) &rarr;</a>
+            <a class="referral-link" href="https://www.yayasanpulih.org" target="_blank" rel="noopener" style="color:#3B6D11;border-color:#3B6D11;background:rgba(59,109,17,0.07);">Yayasan Pulih &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+
+      ${showCrisis ? `
+      <div class="crisis-banner">
+        <div class="crisis-banner-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+        </div>
+        <div class="crisis-banner-text">
+          Jika saat ini kamu merasa sangat kewalahan dan butuh berbicara dengan seseorang segera — <strong>Into The Light Indonesia</strong> bisa dihubungi melalui hotline <a href="tel:119">119 ext 8</a> (24 jam), atau kunjungi <a href="https://www.intothelightid.org" target="_blank" rel="noopener">intothelightid.org</a>.
+        </div>
+      </div>` : ''}
+    </div>
+
+    <div class="disclaimer-footer" style="margin-top:24px;">
+      <p><strong>Perhatian Penting:</strong> Hasil ini adalah skor mentah tanpa normalisasi T-score berbasis data normatif usia dan jenis kelamin. Ini <strong>bukan diagnosis medis final</strong> dan tidak dapat menggantikan penilaian klinis oleh profesional terlatih.</p>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px;" class="no-print">
+      <button class="btn btn-primary" onclick="window.print()" style="flex:1;min-width:140px;background:var(--card);color:var(--text);box-shadow:0 6px 0px var(--border);border:2px solid var(--border);">Simpan PDF</button>
+      <button class="btn btn-primary" onclick="resetAll()" style="flex:1;min-width:140px;background:var(--accent);box-shadow:0 6px 0px var(--accent-dark);">Ulangi Asesmen</button>
+    </div>`;
+
+  container.innerHTML = html;
+  showScreen('screen-results');
+  document.getElementById('topbarProgress').style.display = 'flex';
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressLabel').textContent = '66 / 66';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetAll() {
+  if (!confirm('Yakin ingin mengulang dari awal? Semua jawaban akan dihapus.')) return;
+  localStorage.removeItem('caars_state');
+  state = { name:'', gender:'', ageGroup:'', ageLabel:'', date:'', answers:{}, currentPage:0 };
+  document.getElementById('topbarProgress').style.display = 'none';
+  showScreen('screen-splash');
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+loadState();
+
+if (Object.keys(state.answers).length > 0 && state.answers[66] === undefined && state.gender && state.ageGroup) {
+  const discContainer = document.querySelector('#screen-disclaimer .container');
+  const resumeCard = document.createElement('div');
+  resumeCard.id = 'resumeCard';
+  resumeCard.style.cssText = 'background:var(--card);border:1.5px solid var(--border);border-left:4px solid var(--primary);border-radius:14px;padding:18px 20px;margin-bottom:16px;';
+  resumeCard.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--primary);">Lanjutkan Sesi Sebelumnya?</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Kamu sudah menjawab ${Object.keys(state.answers).length} dari 66 pertanyaan.</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary" style="font-size:12px;padding:8px 14px;" onclick="startFresh()">Mulai Baru</button>
+        <button class="btn" style="font-size:12px;padding:8px 14px;background:var(--primary);color:white;border-radius:10px;" onclick="resumeSession()">Lanjutkan &rarr;</button>
+      </div>
+    </div>`;
+  discContainer.insertBefore(resumeCard, discContainer.firstChild);
+}
+</script>
+</body>
+</html>
